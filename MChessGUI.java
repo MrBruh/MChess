@@ -8,6 +8,9 @@ import javax.swing.*;
  * A class to handle all the GUI elements
  */
 public class MChessGUI {
+    private int frameWidth = 800;
+    private int frameHight = 597;
+    
     private JFrame f;
     private JButton b;
     private MChessBoard board;
@@ -23,9 +26,10 @@ public class MChessGUI {
                 
         f.add(b);//adding button in JFrame  
                 
-        f.setSize(800,600);//400 width and 500 height  
-        f.setLayout(null);//using no layout managers  
-        f.setVisible(true);//making the frame visible  
+        f.setSize(frameWidth, frameHight);
+        f.setLayout(null);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    
     }
     
     void onClick() {

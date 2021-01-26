@@ -11,7 +11,7 @@ import java.awt.event.*;
  */
 public class MChessTile {
 
-    private int tileSize = 75;  // Size of the tile
+    private int tileSize = 70;  // Size of the tile
 
     private int xMatrixPos;     // The x position of the tile on the board
     private int yMatrixPos;     // The y position of the tile on the board
