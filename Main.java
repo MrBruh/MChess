@@ -7,7 +7,7 @@ import javax.swing.*;
 /** test
  *
  */
-public class FirstSwingExample {  
+public class Main {  
   public static void main(String[] args) {  
     JFrame f=new JFrame();//creating instance of JFrame  
               
