@@ -5,6 +5,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; 
+import java.awt.image.*; 
 
 /**
  * A class to hold information about individual tiles
@@ -15,7 +16,7 @@ public class MChessTile {
 
     private int xMatrixPos;     // The x position of the tile on the board
     private int yMatrixPos;     // The y position of the tile on the board
-    private JButton tileButton = new JButton();
+    private MChessTileButton tileButton = new MChessTileButton();
     private boolean holdsPiece = false;     // Whether or not the tile has a piece on it 
 
     /**
@@ -40,6 +41,9 @@ public class MChessTile {
                              yMatrixPos * tileSize,
                              tileSize,
                              tileSize );
+
+        tileButton.setPressedBackgroundColor(colour);
+        //tileButton.setHoverBackgroundColor(colour);
         tileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(holdsPiece) {
