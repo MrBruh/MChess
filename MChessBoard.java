@@ -13,6 +13,8 @@ public class MChessBoard {
 
     /**
      * Constructor which initializes the board tiles
+     * 
+     * @param frame The frame to which all the elements will be added
      */
     public MChessBoard(JFrame frame){
         // Create the Matrix

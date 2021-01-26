@@ -12,19 +12,17 @@ public class MChessGUI {
     private int frameHight = 597;
     
     private JFrame f;
-    private JButton b;
     private MChessBoard board;
 
+    /**
+     * The constructor of MChessGUI that sets up the GUI of the game
+     * 
+     * @param frame The frame to which all the elements will be added
+     */
     public MChessGUI(JFrame frame) {
         f = frame;
 
         board = new MChessBoard(frame);
-
-
-        b = new JButton("click");
-        b.setBounds(130,100,100, 40);
-                
-        f.add(b);//adding button in JFrame  
                 
         f.setSize(frameWidth, frameHight);
         f.setLayout(null);
