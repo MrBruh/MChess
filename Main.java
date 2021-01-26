@@ -4,8 +4,8 @@
 
 import javax.swing.*;  
 
-/** test
- *
+/** 
+ * Main class to initialize the game
  */
 public class Main {  
 
