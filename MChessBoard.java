@@ -62,6 +62,11 @@ public class MChessBoard {
      * @param tile The tile that is selected
      */
     public void setSelectedTile(MChessTile tile) {
+        // Unselect the old tile if one has been already selected
+        if(selectedTile != null){
+            drawTileMovement(selectedTile, true);
+            selectedTile.unselectTile();
+        }
         selectedTile = tile;
     }
 

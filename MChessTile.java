@@ -79,9 +79,7 @@ public class MChessTile {
                         break;
                     case TILE_SELECTED:
                         // Unselect the tile
-                        tileButton.setIcon(piece.getIcon());
-                        state = tileState.TILE_NONE;
-                        board.drawTileMovement(self, true);
+                        unselectTile();
                         break;
                     case TILE_TARGETED:
                         state = tileState.TILE_NONE;
@@ -117,6 +115,17 @@ public class MChessTile {
     public void movePiece(MChessPiece piece) {
         this.piece = piece;
         updatePressable(piece);
+    }
+
+    /**
+     * Function to unselect tile if the tile has been selected
+     */
+    public void unselectTile() {
+        if(state == tileState.TILE_SELECTED) {
+            tileButton.setIcon(piece.getIcon());
+            state = tileState.TILE_NONE;
+            board.drawTileMovement(self, true); 
+        }
     }
 
     /**
