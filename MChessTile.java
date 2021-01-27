@@ -55,6 +55,7 @@ public class MChessTile {
             colour = new Color(125, 135, 150);
         }
 
+        // Set the parameters of the tile button
         tileButton.setBackground(colour);
         tileButton.setBounds(matrixPos[0] * tileSize,
                              matrixPos[1] * tileSize,
@@ -62,17 +63,22 @@ public class MChessTile {
                              tileSize );
 
         tileButton.setPressedBackgroundColor(colour);
+        // By default all buttons are disabled
         tileButton.setEnabled(false);
+        // Add the action listener of the button
         tileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Behave diffently when clicked depeding on the tile's state
                 switch(state){
                     case TILE_NONE:
+                        // Select the tile when there is a piece
                         tileButton.setIcon(combineIcons(selectedIcon1));
                         board.setSelectedTile(self);
-                        state = tileState.TILE_SELECTED;
                         board.drawTileMovement(self, false);
+                        state = tileState.TILE_SELECTED;
                         break;
                     case TILE_SELECTED:
+                        // Unselect the tile
                         tileButton.setIcon(piece.getIcon());
                         state = tileState.TILE_NONE;
                         board.drawTileMovement(self, true);
@@ -81,6 +87,7 @@ public class MChessTile {
                         state = tileState.TILE_NONE;
                         break;
                     case TILE_MOVE_TARGETED:
+                        // Move piece to tile if move targeted
                         board.movePieceToTile(self);
                         state = tileState.TILE_NONE;
                         break;
@@ -95,7 +102,7 @@ public class MChessTile {
     /**
      * Assigns a new piece to the tile with no game logic
      * 
-     * @param piece the piece that is on the tile
+     * @param piece The piece that is on the tile
      */
     public void assignPiece(MChessPiece piece) {
         this.piece = piece;
@@ -105,7 +112,7 @@ public class MChessTile {
     /** 
      * Assigns a new piece to the tile while performing game logic
      * 
-     * @param piece
+     * @param piece The piece that is on the tile
      */
     public void movePiece(MChessPiece piece) {
         this.piece = piece;
@@ -122,59 +129,65 @@ public class MChessTile {
     }
 
     /**
-     * 
+     * Sets the tile's state so that it can be selected for movement
      */
     public void targetMove() {
-        tileButton.setEnabled(true);
-        state = tileState.TILE_MOVE_TARGETED;
-        tileButton.setIcon(selectedIcon2);
+        tileButton.setEnabled(true);            // Enable the tile button
+        state = tileState.TILE_MOVE_TARGETED;   // Set the state to movement targeted
+        tileButton.setIcon(selectedIcon2);      // Set the icon to movement targeted
     }
 
     /**
-     * 
+     * Unselects the tile to be targeted for a move
      */
     public void unTargetMove() {
-        tileButton.setEnabled(false);
-        state = tileState.TILE_NONE;
-        tileButton.setIcon(null);
+        tileButton.setEnabled(false);   // Disable the tile button
+        state = tileState.TILE_NONE;    // Set the state to none
+        tileButton.setIcon(null);       // Set the icon to none
     }
 
     /**
-     * 
+     * Helper function to update the icon and the button of the tile
+     * when the piece reference is updated
      * 
      * @param piece
      */
     private void updatePressable(MChessPiece piece) {
-        if(piece == null) {
-            tileButton.setIcon(null);
-            tileButton.setEnabled(false);
+        if(piece == null) { 
+            tileButton.setIcon(null);            // Remove icon
+            tileButton.setEnabled(false);        // Disable button
         } else {
-            tileButton.setEnabled(true);
-            tileButton.setIcon(piece.getIcon());
+            tileButton.setIcon(piece.getIcon()); // Add new icon
+            tileButton.setEnabled(true);         // Enable button
         }
     }
 
     /**
+     * Gets the position of the tile
      * 
-     * 
-     * @return
+     * @return Returns position of the tile
      */
     public int[] getPos() {
         return new int[]{matrixPos[0], matrixPos[1]};
     }
 
     /**
+     * A helper fucntion to combine a movement icon and the piece icon
      * 
-     * 
-     * @param selectedIcon
-     * @return
+     * @param selectedIcon The movement icon to put under the piece
+     * @return Returns a piece on a momvement tile icon
      */
     private Icon combineIcons(Icon selectedIcon) {
+        // Create an empty image
         BufferedImage tempImage = canvasImage;
+        // Create graphics for drawing    
         Graphics g = tempImage.createGraphics();
+        // Draw icons
         selectedIcon.paintIcon(null, g, 0, 0);
         piece.getIcon().paintIcon(null, g, 0, 0);
+        // Finish drawing
         g.dispose();
+        // Return a combined icon
         return new ImageIcon(tempImage);
     }
 }

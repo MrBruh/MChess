@@ -27,19 +27,21 @@ public class MChessBoard {
         boardMatrix = new MChessTile[boardSize][boardSize];
 
         for (int i = 0; i < boardSize; i++) {
-
             for (int j = 0; j < boardSize; j++) {
                 boardMatrix[i][j] = new MChessTile(frame, this, j, i);
             }
         }
 
+        // Create a movement list for a king
         List<Integer> kingMovement = new ArrayList<>();
         for(int i = 0; i < 8; i++) {
             kingMovement.add(1);
         }
+        // Create and place a king using the king movement and icon
         MChessPiece whiteKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kw.png"));
         boardMatrix[1][2].assignPiece(whiteKing);
 
+        // Create a movement list for a bishop
         List<Integer> bishopMovement = new ArrayList<>();
         for(int i = 0; i < 8; i++) {
             if(i % 2 == 1) {
@@ -48,49 +50,69 @@ public class MChessBoard {
                 bishopMovement.add(0);
             }
         }
+        // Create and place a bishop use the bishop movement and icon
         MChessPiece blackBishop = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"));
         boardMatrix[3][3].assignPiece(blackBishop);
     }
 
     /**
+     * This function is called by a selected tile to let the board know
+     * that it has been selected.
      * 
-     * @param tile
+     * @param tile The tile that is selected
      */
     public void setSelectedTile(MChessTile tile) {
         selectedTile = tile;
     }
 
     /**
+     * This moves a piece by pass the piece reference from the old tile
+     * to the new tile, and unreferencing the old tile
      * 
-     * @param newTile
+     * @param newTile The new tile that a piece is moved to
      */
     public void movePieceToTile(MChessTile newTile) {
+        // Undraw movement tiles
         drawTileMovement(selectedTile, true);
+        // Move the piece to the new tile
         newTile.movePiece(selectedTile.getPiece());
+        // Remove the reference from the old tile
         selectedTile.assignPiece(null);
         selectedTile = null;
     }
 
     /**
+     * A function to draw movement tiles based around the movement list
+     * of the reference tile's piece.
      * 
+     * I would have has this as a private helper function, but is was just
+     * a bit easier to make it public
      * 
-     * @param tile
-     * @param unTarget
+     * @param tile The reference tile to draw around
+     * @param unTarget Whether or not to undraw or draw the movement tiles
      */
     public void drawTileMovement(MChessTile tile, boolean unTarget) {
+        // Get the piece movement ranges and the tile's position
         List<Integer> movementRanges = tile.getPiece().getMovementRanges();
         ListIterator<Integer> itr = movementRanges.listIterator();
         int[] currentPos = tile.getPos();
+
+        // Iterate over all the ranges in the movement range list
         while(itr.hasNext()) {
+            // Get range and index
             int index = itr.nextIndex();
-            int value = itr.next();
-            for(int i = 0; i < value; i++) {
-                System.out.println("draw " + i);
+            int range = itr.next();
+            // Loop over the range of the movement range, and draw a movement
+            // tile across every tile in the range
+            for(int i = 0; i < range; i++) {
+                // Convert the movement range into relative position
                 int[] boardPos = movementRangeToBoardPos(index, i + 1, currentPos.clone());
+                // Check that the relative position is valid
                 if(!checkValidPos(boardPos)){
-                    System.out.println("skipping: " + boardPos[0] + ", " + boardPos[1]);
-                    continue;
+                    continue; // Skip drawing if the position is invalid
                 }
+                // Depending on whether or not to draw or undraw, draw or
+                // undraw the movement tiles
                 if(unTarget) {
                     boardMatrix[boardPos[1]][boardPos[0]].unTargetMove();
                 } else {
@@ -101,10 +123,10 @@ public class MChessBoard {
     }
 
     /**
+     * A helper function to check if a position is on the board or not
      * 
-     * 
-     * @param boardPos
-     * @return
+     * @param boardPos The position to verify
+     * @return True if the position is on the board, false otherwise
      */
     private boolean checkValidPos(int[] boardPos) {
         for(int i = 0; i < boardPos.length; i++){
@@ -116,12 +138,12 @@ public class MChessBoard {
     }
 
     /**
+     * This converts a movement range list into a board position
      * 
-     * 
-     * @param index
-     * @param range
-     * @param currentPos
-     * @return
+     * @param index The index is used to decide direction
+     * @param range The range is used to move x amount if that direction
+     * @param currentPos The relative position from which to move
+     * @return Returns the new position
      */
     private int[] movementRangeToBoardPos(int index, int range, int[] currentPos) {
         switch (index) {
@@ -154,6 +176,7 @@ public class MChessBoard {
                 currentPos[1] -= range;
                 return currentPos;
             default:
+                // Required to prevent compiler from complaining
                 return currentPos;
         }
     }

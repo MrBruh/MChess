@@ -11,15 +11,17 @@ import javax.swing.ImageIcon;
  */
 public class MChessPiece {
 
-    private List<Integer> movementRanges;
-    private List<int[]> jumpPositions;
+    private List<Integer> movementRanges;     // All pieces must have movement
+                                              // (Even if range is 0)
+    private List<int[]> jumpPositions = null; // Not all pieces can jump
 
     private ImageIcon pieceIcon;
 
     /**
+     * Constructor for a piece that doesn't jump
      * 
-     * @param movementRanges
-     * @param pieceIcon
+     * @param movementRanges The movement range list of the piece
+     * @param pieceIcon The icon of the piece
      */
     public MChessPiece(List<Integer> movementRanges, ImageIcon pieceIcon) {
         this.movementRanges = movementRanges;
@@ -27,10 +29,11 @@ public class MChessPiece {
     }
 
     /**
+     * Constructor for a piece that does jump
      * 
-     * @param movementRanges
-     * @param jumpPositions
-     * @param pieceIcon
+     * @param movementRanges The movement range list of the piece
+     * @param jumpPositions The jump positions of the piece
+     * @param pieceIcon The icon of the piece
      */
     public MChessPiece(List<Integer> movementRanges, List<int[]> jumpPositions, ImageIcon pieceIcon) {
         this.movementRanges = movementRanges;
@@ -39,24 +42,27 @@ public class MChessPiece {
     }
 
     /**
+     * Gets the movement ranges of the piece
      * 
-     * @return
+     * @return The movement ranges list of the piece
      */
     public List<Integer> getMovementRanges() {
         return movementRanges;
     }
 
     /**
+     * Gets the jump positions of the piece
      * 
-     * @return
+     * @return The jump positions of the piece
      */
     public List<int[]> getJumpPositions() {
         return jumpPositions;
     }
 
     /**
+     * Gets the icon of the piece
      * 
-     * @return
+     * @return The icon of the piece
      */
     public ImageIcon getIcon() {
         return pieceIcon;
