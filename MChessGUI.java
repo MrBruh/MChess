@@ -29,9 +29,5 @@ public class MChessGUI {
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    
     }
-    
-    void onClick() {
-        System.out.println("woo");
-    }
 
 }
