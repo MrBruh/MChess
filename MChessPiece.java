@@ -16,6 +16,8 @@ public class MChessPiece {
     private List<int[]> jumpPositions = null; // Not all pieces can jump
 
     private ImageIcon pieceIcon;
+    private String pieceColour;
+    private boolean isEthereal = false;
 
     /**
      * Constructor for a piece that doesn't jump
@@ -23,9 +25,10 @@ public class MChessPiece {
      * @param movementRanges The movement range list of the piece
      * @param pieceIcon The icon of the piece
      */
-    public MChessPiece(List<Integer> movementRanges, ImageIcon pieceIcon) {
+    public MChessPiece(List<Integer> movementRanges, ImageIcon pieceIcon, String pieceColour) {
         this.movementRanges = movementRanges;
         this.pieceIcon = pieceIcon;
+        this.pieceColour = pieceColour;
     }
 
     /**
@@ -35,10 +38,11 @@ public class MChessPiece {
      * @param jumpPositions The jump positions of the piece
      * @param pieceIcon The icon of the piece
      */
-    public MChessPiece(List<Integer> movementRanges, List<int[]> jumpPositions, ImageIcon pieceIcon) {
+    public MChessPiece(List<Integer> movementRanges, List<int[]> jumpPositions, ImageIcon pieceIcon, String pieceColour) {
         this.movementRanges = movementRanges;
         this.jumpPositions = jumpPositions;
         this.pieceIcon = pieceIcon;
+        this.pieceColour = pieceColour;
     }
 
     /**
@@ -66,5 +70,14 @@ public class MChessPiece {
      */
     public ImageIcon getIcon() {
         return pieceIcon;
+    }
+    
+    /**
+     * Gets the colour of the piece
+     * 
+     * @return The colour of the piece
+     */
+    public String getColour() {
+        return pieceColour;
     }
 }

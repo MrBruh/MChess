@@ -24,8 +24,8 @@ public class MChessTile {
     private BufferedImage canvasImage = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB) ;
     private static final Icon selectedIcon1 = new ImageIcon("Graphics/Selected1.png");
     private static final Icon selectedIcon2 = new ImageIcon("Graphics/Selected2.png");
-
-    private Icon combinedIcon = null;
+    private static final Icon TargetIcon1 = new ImageIcon("Graphics/Target1.png");
+    private static final Icon EtherealIcon2 = new ImageIcon("Graphics/Ethereal1.png");
 
     enum tileState {
         TILE_NONE,          // When the tile is neither selected or targeted
@@ -50,9 +50,9 @@ public class MChessTile {
         // Choosing a colour using the XOR operator
         Color colour;
         if(matrixPos[0] % 2 == 0 ^ matrixPos[1] % 2 == 0 ) {
-            colour = new Color(232, 235, 239);
-        } else {
             colour = new Color(125, 135, 150);
+        } else {
+            colour = new Color(232, 235, 239);
         }
 
         // Set the parameters of the tile button
@@ -143,7 +143,7 @@ public class MChessTile {
      * @param unTarget
      * @return
      */
-    public boolean targetMove(boolean unTarget) {
+    public boolean targetMove(boolean unTarget, MChessPiece targetingPiece) {
         if(piece == null) {
             if(unTarget){
                 // Disable button and remove icon
@@ -158,6 +158,15 @@ public class MChessTile {
             }
             return false;
         } else {
+            if(unTarget) {
+                // Remove target icon  
+                state = tileState.TILE_NONE;    
+                tileButton.setIcon(piece.getIcon());
+            } else if (!targetingPiece.getColour().equals(piece.getColour())) {
+                tileButton.setEnabled(true);
+                state = tileState.TILE_TARGETED;
+                tileButton.setIcon(combineIcons(TargetIcon1));
+            } 
             return true;
         }    
     }

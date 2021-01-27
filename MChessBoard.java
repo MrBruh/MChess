@@ -16,6 +16,8 @@ public class MChessBoard {
     private MChessTile[][] boardMatrix; // This matrix holds all the indiviual tiles
     private int boardSize = 8; // This defines the board size
     private MChessTile selectedTile = null; // The piece that is selected
+    private String pieceColourBlack = "black";
+    private String pieceColourWhite = "white";
 
     /**
      * Constructor which initializes the board tiles
@@ -37,9 +39,11 @@ public class MChessBoard {
         for(int i = 0; i < 8; i++) {
             kingMovement.add(1);
         }
-        // Create and place a king using the king movement and icon
-        MChessPiece whiteKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kw.png"));
-        boardMatrix[1][2].assignPiece(whiteKing);
+        // Create and place kings using the king movement and icon
+        MChessPiece whiteKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kw.png"), pieceColourWhite);
+        MChessPiece blackKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kb.png"), pieceColourBlack);
+        boardMatrix[7][3].assignPiece(whiteKing);
+        boardMatrix[0][3].assignPiece(blackKing);
 
         // Create a movement list for a bishop
         List<Integer> bishopMovement = new ArrayList<>();
@@ -50,9 +54,26 @@ public class MChessBoard {
                 bishopMovement.add(0);
             }
         }
-        // Create and place a bishop use the bishop movement and icon
-        MChessPiece blackBishop = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"));
-        boardMatrix[3][3].assignPiece(blackBishop);
+        // Create and place bishops using the bishop movement and icon
+        MChessPiece whiteBishop1 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bw.png"), pieceColourWhite);
+        MChessPiece whiteBishop2 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bw.png"), pieceColourWhite);
+        MChessPiece blackBishop1 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"), pieceColourBlack);
+        MChessPiece blackBishop2 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"), pieceColourBlack);
+        boardMatrix[7][2].assignPiece(whiteBishop1);
+        boardMatrix[7][5].assignPiece(whiteBishop2);
+        boardMatrix[0][2].assignPiece(blackBishop1);
+        boardMatrix[0][5].assignPiece(blackBishop2);
+
+        // Create a movement list for a queen
+        List<Integer> queenMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            queenMovement.add(7);
+        }
+        // Create and place queens using the queen movement and icon
+        MChessPiece whiteQueen = new MChessPiece(queenMovement, new ImageIcon("Graphics/qw.png"), pieceColourWhite);
+        MChessPiece blackQueen = new MChessPiece(queenMovement, new ImageIcon("Graphics/qb.png"), pieceColourBlack);
+        boardMatrix[7][4].assignPiece(whiteQueen);
+        boardMatrix[0][4].assignPiece(blackQueen);
     }
 
     /**
@@ -118,7 +139,7 @@ public class MChessBoard {
                 }
                 // Depending on whether or not to draw or undraw, draw or
                 // undraw the movement tiles
-                if (boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget)) {
+                if (boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget, selectedTile.getPiece())) {
                     break; // Stop looping if the tile obstructs movement
                 }
             }
