@@ -129,21 +129,28 @@ public class MChessTile {
     }
 
     /**
-     * Sets the tile's state so that it can be selected for movement
+     * Targets or untargets this tile for movement
+     * 
+     * @param unTarget
+     * @return
      */
-    public void targetMove() {
-        tileButton.setEnabled(true);            // Enable the tile button
-        state = tileState.TILE_MOVE_TARGETED;   // Set the state to movement targeted
-        tileButton.setIcon(selectedIcon2);      // Set the icon to movement targeted
-    }
-
-    /**
-     * Unselects the tile to be targeted for a move
-     */
-    public void unTargetMove() {
-        tileButton.setEnabled(false);   // Disable the tile button
-        state = tileState.TILE_NONE;    // Set the state to none
-        tileButton.setIcon(null);       // Set the icon to none
+    public boolean targetMove(boolean unTarget) {
+        if(piece == null) {
+            if(unTarget){
+                // Disable button and remove icon
+                tileButton.setEnabled(false);   
+                state = tileState.TILE_NONE;    
+                tileButton.setIcon(null); 
+            } else {
+                // Enable button and add icon
+                tileButton.setEnabled(true);            
+                state = tileState.TILE_MOVE_TARGETED;   
+                tileButton.setIcon(selectedIcon2); 
+            }
+            return false;
+        } else {
+            return true;
+        }    
     }
 
     /**

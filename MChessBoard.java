@@ -113,10 +113,8 @@ public class MChessBoard {
                 }
                 // Depending on whether or not to draw or undraw, draw or
                 // undraw the movement tiles
-                if(unTarget) {
-                    boardMatrix[boardPos[1]][boardPos[0]].unTargetMove();
-                } else {
-                    boardMatrix[boardPos[1]][boardPos[0]].targetMove();
+                if (boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget)) {
+                    break; // Stop looping if the tile obstructs movement
                 }
             }
         }
