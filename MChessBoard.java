@@ -39,6 +39,17 @@ public class MChessBoard {
         }
         MChessPiece whiteKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kw.png"));
         boardMatrix[1][1].assignPiece(whiteKing);
+
+        List<Integer> bishopMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            if(i % 2 == 1) {
+                bishopMovement.add(7);
+            } else {
+                bishopMovement.add(0);
+            }
+        }
+        MChessPiece blackBishop = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"));
+        boardMatrix[6][6].assignPiece(blackBishop);
     }
 
     /**
@@ -54,8 +65,10 @@ public class MChessBoard {
      * @param newTile
      */
     public void movePieceToTile(MChessTile newTile) {
+        drawTileMovement(selectedTile, true);
         newTile.movePiece(selectedTile.getPiece());
         selectedTile.assignPiece(null);
+        selectedTile = null;
     }
 
     /**
@@ -72,15 +85,40 @@ public class MChessBoard {
             int value = itr.next();
             for(int i = 0; i < value; i++) {
                 int[] boardPos = movementRangeToBoardPos(index, tile.getPos());
+                if(!checkValidPos(boardPos)){
+                    continue;
+                }
                 if(unTarget) {
-                    boardMatrix[boardPos[0]][boardPos[1]].unTargetMove();
+                    boardMatrix[boardPos[1]][boardPos[0]].unTargetMove();
                 } else {
-                    boardMatrix[boardPos[0]][boardPos[1]].targetMove();
+                    boardMatrix[boardPos[1]][boardPos[0]].targetMove();
                 }
             }
         }
     }
 
+    /**
+     * 
+     * 
+     * @param boardPos
+     * @return
+     */
+    private boolean checkValidPos(int[] boardPos) {
+        for(int i = 0; i < boardPos.length; i++){
+            if(boardPos[0] < 0 || boardPos[0] > 7){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * 
+     * @param index
+     * @param range
+     * @return
+     */
     private int[] movementRangeToBoardPos(int index, int[] range) {
         switch (index) {
             case 0: // North

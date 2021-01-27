@@ -4,7 +4,8 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*; 
+import java.awt.event.*;
+import java.awt.image.BufferedImage; 
 
 /**
  * A class to hold information about individual tiles
@@ -20,10 +21,11 @@ public class MChessTile {
 
     private MChessTile self = this;     // I know this looks dumb, but it has to be done 
 
+    private BufferedImage canvasImage = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB) ;
     private static final Icon selectedIcon1 = new ImageIcon("Graphics/Selected1.png");
     private static final Icon selectedIcon2 = new ImageIcon("Graphics/Selected2.png");
 
-    private JLabel imageLabel = new JLabel();
+    private Icon combinedIcon = null;
 
     enum tileState {
         TILE_NONE,          // When the tile is neither selected or targeted
@@ -65,12 +67,13 @@ public class MChessTile {
             public void actionPerformed(ActionEvent e) {
                 switch(state){
                     case TILE_NONE:
-                        tileButton.setIcon(selectedIcon1);
+                        tileButton.setIcon(combineIcons(selectedIcon1));
+                        board.setSelectedTile(self);
                         state = tileState.TILE_SELECTED;
                         board.drawTileMovement(self, false);
                         break;
                     case TILE_SELECTED:
-                        tileButton.setIcon(null);
+                        tileButton.setIcon(piece.getIcon());
                         state = tileState.TILE_NONE;
                         board.drawTileMovement(self, true);
                         break;
@@ -87,13 +90,6 @@ public class MChessTile {
             }
         });
         frame.add(tileButton);
-
-        imageLabel.setBounds(matrixPos[0] * tileSize,
-                             matrixPos[1] * tileSize,
-                             tileSize,
-                             tileSize );
-
-        frame.add(imageLabel);
     }
 
     /**
@@ -150,11 +146,11 @@ public class MChessTile {
      */
     private void updatePressable(MChessPiece piece) {
         if(piece == null) {
-            imageLabel.setIcon(null);
+            tileButton.setIcon(null);
             tileButton.setEnabled(false);
         } else {
             tileButton.setEnabled(true);
-            imageLabel.setIcon(piece.getIcon());
+            tileButton.setIcon(piece.getIcon());
         }
     }
 
@@ -165,5 +161,20 @@ public class MChessTile {
      */
     public int[] getPos() {
         return new int[]{matrixPos[0], matrixPos[1]};
+    }
+
+    /**
+     * 
+     * 
+     * @param selectedIcon
+     * @return
+     */
+    private Icon combineIcons(Icon selectedIcon) {
+        BufferedImage tempImage = canvasImage;
+        Graphics g = tempImage.createGraphics();
+        selectedIcon.paintIcon(null, g, 0, 0);
+        piece.getIcon().paintIcon(null, g, 0, 0);
+        g.dispose();
+        return new ImageIcon(tempImage);
     }
 }
