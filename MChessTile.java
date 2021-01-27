@@ -21,7 +21,6 @@ public class MChessTile {
 
     private MChessTile self = this;     // I know this looks dumb, but it has to be done 
 
-    private BufferedImage canvasImage = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB) ;
     private static final Icon selectedIcon1 = new ImageIcon("Graphics/Selected1.png");
     private static final Icon selectedIcon2 = new ImageIcon("Graphics/Selected2.png");
     private static final Icon TargetIcon1 = new ImageIcon("Graphics/Target1.png");
@@ -204,7 +203,7 @@ public class MChessTile {
      */
     private Icon combineIcons(Icon selectedIcon) {
         // Create an empty image
-        BufferedImage tempImage = canvasImage;
+        BufferedImage tempImage = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB);
         // Create graphics for drawing    
         Graphics g = tempImage.createGraphics();
         // Draw icons
