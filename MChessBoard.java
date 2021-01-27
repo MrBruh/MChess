@@ -38,7 +38,7 @@ public class MChessBoard {
             kingMovement.add(1);
         }
         MChessPiece whiteKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kw.png"));
-        boardMatrix[1][1].assignPiece(whiteKing);
+        boardMatrix[1][2].assignPiece(whiteKing);
 
         List<Integer> bishopMovement = new ArrayList<>();
         for(int i = 0; i < 8; i++) {
@@ -49,7 +49,7 @@ public class MChessBoard {
             }
         }
         MChessPiece blackBishop = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"));
-        boardMatrix[6][6].assignPiece(blackBishop);
+        boardMatrix[3][3].assignPiece(blackBishop);
     }
 
     /**
@@ -80,12 +80,15 @@ public class MChessBoard {
     public void drawTileMovement(MChessTile tile, boolean unTarget) {
         List<Integer> movementRanges = tile.getPiece().getMovementRanges();
         ListIterator<Integer> itr = movementRanges.listIterator();
+        int[] currentPos = tile.getPos();
         while(itr.hasNext()) {
             int index = itr.nextIndex();
             int value = itr.next();
             for(int i = 0; i < value; i++) {
-                int[] boardPos = movementRangeToBoardPos(index, tile.getPos());
+                System.out.println("draw " + i);
+                int[] boardPos = movementRangeToBoardPos(index, i + 1, currentPos.clone());
                 if(!checkValidPos(boardPos)){
+                    System.out.println("skipping: " + boardPos[0] + ", " + boardPos[1]);
                     continue;
                 }
                 if(unTarget) {
@@ -105,7 +108,7 @@ public class MChessBoard {
      */
     private boolean checkValidPos(int[] boardPos) {
         for(int i = 0; i < boardPos.length; i++){
-            if(boardPos[0] < 0 || boardPos[0] > 7){
+            if(boardPos[i] < 0 || boardPos[i] > 7){
                 return false;
             }
         }
@@ -117,40 +120,41 @@ public class MChessBoard {
      * 
      * @param index
      * @param range
+     * @param currentPos
      * @return
      */
-    private int[] movementRangeToBoardPos(int index, int[] range) {
+    private int[] movementRangeToBoardPos(int index, int range, int[] currentPos) {
         switch (index) {
             case 0: // North
-                range[1] -= 1;
-                return range;
+                currentPos[1] -= range;
+                return currentPos;
             case 1: // Northeast
-                range[0] += 1;
-                range[1] -= 1;
-                return range;
+                currentPos[0] += range;
+                currentPos[1] -= range;
+                return currentPos;
             case 2: // East
-                range[0] += 1;
-                return range;
+                currentPos[0] += range;
+                return currentPos;
             case 3: // Southeast
-                range[0] += 1;
-                range[1] += 1;
-                return range;
+                currentPos[0] += range;
+                currentPos[1] += range;
+                return currentPos;
             case 4: // South
-                range[1] += 1;
-                return range;
+                currentPos[1] += range;
+                return currentPos;
             case 5: // Southwest
-                range[0] -= 1;
-                range[1] += 1;
-                return range;
+                currentPos[0] -= range;
+                currentPos[1] += range;
+                return currentPos;
             case 6: // West
-                range[0] -= 1;
-                return range;
+                currentPos[0] -= range;
+                return currentPos;
             case 7: // Northwest
-                range[0] -= 1;
-                range[1] -= 1;
-                return range;
+                currentPos[0] -= range;
+                currentPos[1] -= range;
+                return currentPos;
             default:
-                return range;
+                return currentPos;
         }
     }
 }
