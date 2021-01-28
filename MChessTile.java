@@ -184,7 +184,7 @@ public class MChessTile {
                 // Remove target icon  
                 setState(tileState.TILE_DISABLED);    
                 tileButton.setIcon(piece.getIcon());
-            } else if (!targetingPiece.getColour().equals(piece.getColour())) {
+            } else if (!targetingPiece.getColour().equals(piece.getColour()) && !targetingPiece.isNotMoveAttacker()) {
                 tileButton.setEnabled(true);
                 setState(tileState.TILE_TARGETED);
                 tileButton.setIcon(combineIcons(TargetIcon1));

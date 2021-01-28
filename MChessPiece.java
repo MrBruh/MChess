@@ -20,6 +20,7 @@ public class MChessPiece {
     private boolean isEthereal = false;
     private boolean isCaptured = false;
     private boolean isKingPiece = false;
+    private boolean isNotMoveAttacker = false;
 
     private boolean isPawnFirstMove = false;
     private List<Integer> pawnFirstMovementRanges;
@@ -143,6 +144,24 @@ public class MChessPiece {
     }
 
     /**
+     * Returns whether or not the piece can attack on movement
+     * 
+     * @return Whether or not the piece can attack on movement
+     */
+    public boolean isNotMoveAttacker() {
+        return isNotMoveAttacker; 
+     }
+ 
+     /**
+      * Sets whether or not the piece can attack on movement
+      * 
+      * @param isNotMoveAttacker Whether or not the piece can attack on movement
+      */
+     public void setNotMoveAttacker(boolean isNotMoveAttacker) {
+         this.isNotMoveAttacker = isNotMoveAttacker;
+     }
+
+     /**
      * Returns whether or not the piece is the king piece
      * 
      * @return Whether or not the piece is the king piece
@@ -159,6 +178,7 @@ public class MChessPiece {
      public void setKingPiece(boolean isKingPiece) {
          this.isKingPiece = isKingPiece;
      }
+
 
     /**
      * Used to set piece as a pawn with a first move

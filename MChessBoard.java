@@ -150,6 +150,7 @@ public class MChessBoard {
         for(int i = 0; i < 8; i++) {
             whitePieceList.add(new MChessPiece(whitePawnMovement, new ImageIcon("Graphics/pw.png"), pieceColourWhite));
             whitePieceList.get(8 + i).initializePawn(whitePawnFirstMovement);
+            whitePieceList.get(8 + i).setNotMoveAttacker(true);
         }
 
         blackPieceList.add(blackRook1);
@@ -163,6 +164,7 @@ public class MChessBoard {
         for(int i = 0; i < 8; i++) {
             blackPieceList.add(new MChessPiece(blackPawnMovement, new ImageIcon("Graphics/pb.png"), pieceColourBlack));
             blackPieceList.get(8 + i).initializePawn(blackPawnFirstMovement);
+            blackPieceList.get(8 + i).setNotMoveAttacker(true);
         }
 
         resetPositions();
