@@ -19,6 +19,10 @@ public class MChessPiece {
     private String pieceColour;
     private boolean isEthereal = false;
     private boolean isCaptured = false;
+    private boolean isKingPiece = false;
+
+    private boolean isPawnFirstMove = false;
+    private List<Integer> pawnFirstMovementRanges;
 
     private MChessTile tile;
 
@@ -85,6 +89,15 @@ public class MChessPiece {
     }
 
     /**
+     * Gets the first movement ranges of the pawn
+     * 
+     * @return The first movement ranges list of the pawn
+     */
+    public List<Integer> getFirstMovementRanges() {
+        return pawnFirstMovementRanges;
+    }
+
+    /**
      * Gets the jump positions of the piece
      * 
      * @return The jump positions of the piece
@@ -114,7 +127,7 @@ public class MChessPiece {
     /**
      * Returns whether or not the piece is captured
      * 
-     * @return whether or not the piece is captured
+     * @return Whether or not the piece is captured
      */
     public boolean isCaptured() {
        return isCaptured; 
@@ -123,9 +136,53 @@ public class MChessPiece {
     /**
      * Sets the piece's captured state
      * 
-     * @param isCaptured the captured state to which to set the piece
+     * @param isCaptured The captured state to which to set the piece
      */
     public void setCaptured(boolean isCaptured) {
         this.isCaptured = isCaptured;
+    }
+
+    /**
+     * Returns whether or not the piece is the king piece
+     * 
+     * @return Whether or not the piece is the king piece
+     */
+    public boolean isKingPiece() {
+        return isKingPiece; 
+     }
+ 
+     /**
+      * Sets king piece state
+      * 
+      * @param isKingPiece The state to set the king piece state
+      */
+     public void setKingPiece(boolean isKingPiece) {
+         this.isKingPiece = isKingPiece;
+     }
+
+    /**
+     * Used to set piece as a pawn with a first move
+     */
+    public void initializePawn(List<Integer> movementRanges) {
+      isPawnFirstMove = true;
+      pawnFirstMovementRanges = movementRanges;  
+    }
+
+    /**
+     * Returns whether or not the piece is a pawn with a first move
+     * 
+     * @return Whether or not the piece is a pawn with a first move
+     */
+    public boolean isPawnFirstMove() {
+        return isPawnFirstMove;
+    }
+
+    /**
+      * Sets the pawn first move state
+      * 
+      * @param isCaptured The state to set the pawn first move state
+      */
+      public void setPawnFirstMove(boolean isPawnFirstMove) {
+        this.isPawnFirstMove = isPawnFirstMove;
     }
 }

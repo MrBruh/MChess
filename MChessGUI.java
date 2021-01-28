@@ -25,6 +25,8 @@ public class MChessGUI {
     private JLabel whiteCapturedLabel = new JLabel("<html><div style='text-align: center;'><b>White<b></div></html>");
     private JLabel blackCapturedLabel = new JLabel("<html><div style='text-align: center;'><b>Black<b></div></html>");
     private JButton forfeitButton = new JButton("Forfeit");
+    private JButton playAgainButton = new JButton("Play Again");
+    private boolean gameWon = false;
 
     private JLabel whiteCapturedDisplayLabel = new JLabel();
     private JLabel blackCapturedDisplayLabel = new JLabel();
@@ -86,15 +88,32 @@ public class MChessGUI {
 
         f.add(blackCapturedDisplayLabel);
 
-        forfeitButton.setBounds(610, 150, 100, 50);
+        forfeitButton.setBounds(590, 150, 140, 50);
         forfeitButton.setFont(buttonFont);
         forfeitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("give up");
+                if(board.getTurns() % 2 == 0) {
+                    setWinner("white");
+                } else {
+                    setWinner("black");
+                }
             }
         });
 
         f.add(forfeitButton);
+
+        playAgainButton.setBounds(590, 205, 140, 50);
+        playAgainButton.setFont(buttonFont);
+        playAgainButton.setEnabled(false);
+        playAgainButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                forfeitButton.setEnabled(true);
+                playAgainButton.setEnabled(false);
+                resetGame();
+            }
+        });
+
+        f.add(playAgainButton);
 
         resetCapturedImages();
 
@@ -104,6 +123,28 @@ public class MChessGUI {
         f.setVisible(true);
         
     }
+
+    /**
+     * 
+     * @param winner
+     */
+    private void setWinner(String loser) {
+        if(loser.equals("black")) {
+            turnIndicator.setText("<html><div style='text-align: center;'><b>White wins!<b></div></html>");
+        } else {
+            turnIndicator.setText("<html><div style='text-align: center;'><b>Black wins!<b></div></html>");
+        }
+        playAgainButton.setEnabled(true);
+        forfeitButton.setEnabled(false);
+        gameWon = true;
+    }
+
+    private void resetGame(){
+        board.resetPositions();
+        turnIndicator.setText(whiteTurnText);
+        resetCapturedImages();
+        gameWon = false;
+    }
     
     /**
      * 
@@ -111,6 +152,9 @@ public class MChessGUI {
      * @param turns
      */
     public void updateTurn(int turns) {
+        if(gameWon){
+            return;
+        }
         if(turns % 2 == 0) {
             turnIndicator.setText(whiteTurnText);
         } else {
@@ -126,6 +170,9 @@ public class MChessGUI {
     public void addCaptured(MChessPiece piece) {
         piece.assignTile(null);
         piece.setCaptured(true);
+        if(piece.isKingPiece()){
+            setWinner(piece.getColour());
+        }
         if(piece.getColour().equals("white")) {
             piece.getIcon().paintIcon(null, blackCapturedGraphics, (blackCapturedCount * 20), 0);
             blackCapturedDisplayLabel.setIcon(new ImageIcon(blackCapturedImage));
