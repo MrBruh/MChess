@@ -81,7 +81,7 @@ public class MChessBoard {
 
         List<Integer> rookMovement = new ArrayList<>();
         for(int i = 0; i < 8; i++) {
-            if(i % 2 == 1) {
+            if(i % 2 == 0) {
                 rookMovement.add(7);
             } else {
                 rookMovement.add(0);
