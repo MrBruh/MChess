@@ -18,6 +18,7 @@ public class MChessPiece {
     private ImageIcon pieceIcon;
     private String pieceColour;
     private boolean isEthereal = false;
+    private boolean isCaptured = false;
 
     private MChessTile tile;
 
@@ -108,5 +109,23 @@ public class MChessPiece {
      */
     public String getColour() {
         return pieceColour;
+    }
+
+    /**
+     * Returns whether or not the piece is captured
+     * 
+     * @return whether or not the piece is captured
+     */
+    public boolean isCaptured() {
+       return isCaptured; 
+    }
+
+    /**
+     * Sets the piece's captured state
+     * 
+     * @param isCaptured the captured state to which to set the piece
+     */
+    public void setCaptured(boolean isCaptured) {
+        this.isCaptured = isCaptured;
     }
 }

@@ -2,8 +2,11 @@
  * @author MrBruh 
  */
 
+import java.awt.*;
 import java.awt.Font;
 import java.awt.event.*; 
+import java.awt.image.BufferedImage;
+
 
 import javax.swing.*;  
 
@@ -22,6 +25,15 @@ public class MChessGUI {
     private JLabel whiteCapturedLabel = new JLabel("<html><div style='text-align: center;'><b>White<b></div></html>");
     private JLabel blackCapturedLabel = new JLabel("<html><div style='text-align: center;'><b>Black<b></div></html>");
     private JButton forfeitButton = new JButton("Forfeit");
+
+    private JLabel whiteCapturedDisplayLabel = new JLabel();
+    private JLabel blackCapturedDisplayLabel = new JLabel();
+    private BufferedImage whiteCapturedImage;
+    private BufferedImage blackCapturedImage;
+    private Graphics whiteCapturedGraphics;
+    private Graphics blackCapturedGraphics;
+    private int whiteCapturedCount = 0;
+    private int blackCapturedCount = 0;
     
     private String whiteTurnText = "<html><div style='text-align: center;'><b>White's turn<b></div></html>";
     private String blackTurnText = "<html><div style='text-align: center;'><b>Black's turn<b></div></html>";
@@ -55,12 +67,24 @@ public class MChessGUI {
 
         f.add(whiteCapturedLabel);
 
+        whiteCapturedDisplayLabel.setBounds(580, 357, 180, 70);
+        whiteCapturedDisplayLabel.setOpaque(true);
+        whiteCapturedDisplayLabel.setFocusable(false);
+
+        f.add(whiteCapturedDisplayLabel);
+
         blackCapturedLabel.setBounds(580, 427, 180, 50);
         blackCapturedLabel.setFont(textFont);
         blackCapturedLabel.setOpaque(false);
         blackCapturedLabel.setFocusable(false);
 
         f.add(blackCapturedLabel);
+
+        blackCapturedDisplayLabel.setBounds(580, 477, 180, 70);
+        blackCapturedDisplayLabel.setOpaque(true);
+        blackCapturedDisplayLabel.setFocusable(false);
+
+        f.add(blackCapturedDisplayLabel);
 
         forfeitButton.setBounds(610, 150, 100, 50);
         forfeitButton.setFont(buttonFont);
@@ -72,19 +96,63 @@ public class MChessGUI {
 
         f.add(forfeitButton);
 
+        resetCapturedImages();
+
         board = new MChessBoard(frame, this);
         
         f.setVisible(false);
         f.setVisible(true);
         
     }
-
-    public void testfunc(int i) {
-        if(i % 2 == 0) {
+    
+    /**
+     * 
+     * 
+     * @param turns
+     */
+    public void updateTurn(int turns) {
+        if(turns % 2 == 0) {
             turnIndicator.setText(whiteTurnText);
         } else {
             turnIndicator.setText(blackTurnText);
         }
+    }
+
+    /**
+     * 
+     * 
+     * @param piece
+     */
+    public void addCaptured(MChessPiece piece) {
+        piece.assignTile(null);
+        piece.setCaptured(true);
+        if(piece.getColour().equals("white")) {
+            piece.getIcon().paintIcon(null, blackCapturedGraphics, (blackCapturedCount * 20), 0);
+            blackCapturedDisplayLabel.setIcon(new ImageIcon(blackCapturedImage));
+            blackCapturedCount += 1;
+        } else {
+            piece.getIcon().paintIcon(null, whiteCapturedGraphics, (whiteCapturedCount * 20), 0);
+            whiteCapturedDisplayLabel.setIcon(new ImageIcon(whiteCapturedImage));
+            whiteCapturedCount += 1;
+        }
+    }
+
+    /**
+     * 
+     */
+    private void resetCapturedImages() {
+        whiteCapturedDisplayLabel.setIcon(null);
+        blackCapturedDisplayLabel.setIcon(null);
+        whiteCapturedImage = new BufferedImage(200, 70, BufferedImage.TYPE_INT_ARGB);
+        blackCapturedImage = new BufferedImage(200, 70, BufferedImage.TYPE_INT_ARGB);
+        whiteCapturedGraphics = whiteCapturedImage.getGraphics();
+        blackCapturedGraphics = blackCapturedImage.getGraphics();
+        whiteCapturedCount = 0;
+        blackCapturedCount = 0;
+    }
+
+    public void testfunc(int i) {
+        //
     }
 
 }

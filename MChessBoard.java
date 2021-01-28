@@ -155,7 +155,16 @@ public class MChessBoard {
             disableWhite();
         }
 
-        gui.testfunc(turns);
+        gui.updateTurn(turns);
+    }
+
+    /**
+     * 
+     * 
+     * @return
+     */
+    public MChessGUI getGUI() {
+        return gui;
     }
 
     /**

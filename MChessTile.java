@@ -82,6 +82,8 @@ public class MChessTile {
                         unselectTile();
                         break;
                     case TILE_TARGETED:
+                        board.getGUI().addCaptured(piece);
+                        board.movePieceToTile(self);
                         break;
                     case TILE_MOVE_TARGETED:
                         // Move piece to tile if move targeted
@@ -178,7 +180,7 @@ public class MChessTile {
             }
             return false;
         } else {
-            if(unTarget) {
+            if(unTarget && state != tileState.TILE_NONE) {
                 // Remove target icon  
                 setState(tileState.TILE_DISABLED);    
                 tileButton.setIcon(piece.getIcon());
@@ -194,7 +196,7 @@ public class MChessTile {
     private void setState(tileState state) {
         this.state = state;
         if(piece != null) {
-            if(piece.getColour().equals("white")) {
+            /*if(piece.getColour().equals("white")) {
                 switch (state) {
                     case TILE_NONE:
                         System.out.println("Setting state to none");
@@ -214,7 +216,7 @@ public class MChessTile {
                     default:
                         break;
                 }
-            }
+            }*/
         }
     }
 
