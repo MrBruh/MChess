@@ -19,6 +19,8 @@ public class MChessPiece {
     private String pieceColour;
     private boolean isEthereal = false;
 
+    private MChessTile tile;
+
     /**
      * Constructor for a piece that doesn't jump
      * 
@@ -43,6 +45,33 @@ public class MChessPiece {
         this.jumpPositions = jumpPositions;
         this.pieceIcon = pieceIcon;
         this.pieceColour = pieceColour;
+    }
+
+    /**
+     * Assigns a tile to the piece
+     * 
+     * @param tile the tile to be assigned to the piece
+     */
+    public void assignTile(MChessTile tile) {
+        this.tile = tile;
+    }
+
+    /**
+     * Prevents the piece's tile from being selected
+     */
+    public void disableTile() {
+        if(tile != null) {
+            tile.disableTile();
+        }
+    }
+
+    /**
+     * Allows the piece's tile to be selected
+     */
+    public void enableTile() {
+        if(tile != null) {
+            tile.enableTile();
+        }
     }
 
     /**

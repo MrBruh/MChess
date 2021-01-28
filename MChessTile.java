@@ -30,7 +30,8 @@ public class MChessTile {
         TILE_NONE,          // When the tile is neither selected or targeted
         TILE_SELECTED,      // When the tile is selected
         TILE_TARGETED,      // When the tile is targeted for an attack
-        TILE_MOVE_TARGETED  // When the tile is target for a move
+        TILE_MOVE_TARGETED, // When the tile is target for a move
+        TILE_DISABLED       // When the tile has a piece that can't move
     }
 
     private tileState state = tileState.TILE_NONE;
@@ -74,19 +75,19 @@ public class MChessTile {
                         tileButton.setIcon(combineIcons(selectedIcon1));
                         board.setSelectedTile(self);
                         board.drawTileMovement(self, false);
-                        state = tileState.TILE_SELECTED;
+                        setState(tileState.TILE_SELECTED);
                         break;
                     case TILE_SELECTED:
                         // Unselect the tile
                         unselectTile();
                         break;
                     case TILE_TARGETED:
-                        state = tileState.TILE_NONE;
                         break;
                     case TILE_MOVE_TARGETED:
                         // Move piece to tile if move targeted
                         board.movePieceToTile(self);
-                        state = tileState.TILE_NONE;
+                        break;
+                    case TILE_DISABLED:
                         break;
                     default:
                         break;
@@ -97,11 +98,28 @@ public class MChessTile {
     }
 
     /**
+     * Prevents the tile's piece from being selected
+     */
+    public void disableTile() {
+        setState(tileState.TILE_DISABLED);
+    }
+
+    /**
+     * Allows the tile's piece to be selected
+     */
+    public void enableTile() {
+        setState(tileState.TILE_NONE);
+    }
+
+    /**
      * Assigns a new piece to the tile with no game logic
      * 
      * @param piece The piece that is on the tile
      */
     public void assignPiece(MChessPiece piece) {
+        if(piece != null) {
+            piece.assignTile(this);
+        }
         this.piece = piece;
         updatePressable(piece);
     }
@@ -112,6 +130,9 @@ public class MChessTile {
      * @param piece The piece that is on the tile
      */
     public void movePiece(MChessPiece piece) {
+        if(piece != null) {
+            piece.assignTile(this);
+        }
         this.piece = piece;
         updatePressable(piece);
     }
@@ -122,7 +143,7 @@ public class MChessTile {
     public void unselectTile() {
         if(state == tileState.TILE_SELECTED) {
             tileButton.setIcon(piece.getIcon());
-            state = tileState.TILE_NONE;
+            setState(tileState.TILE_NONE);
             board.drawTileMovement(self, true); 
         }
     }
@@ -146,28 +167,55 @@ public class MChessTile {
         if(piece == null) {
             if(unTarget){
                 // Disable button and remove icon
-                tileButton.setEnabled(false);   
-                state = tileState.TILE_NONE;    
-                tileButton.setIcon(null); 
+                tileButton.setEnabled(false); 
+                setState(tileState.TILE_NONE);   
+                tileButton.setIcon(null);
             } else {
                 // Enable button and add icon
-                tileButton.setEnabled(true);            
-                state = tileState.TILE_MOVE_TARGETED;   
+                tileButton.setEnabled(true);        
+                setState(tileState.TILE_MOVE_TARGETED);    
                 tileButton.setIcon(selectedIcon2); 
             }
             return false;
         } else {
             if(unTarget) {
                 // Remove target icon  
-                state = tileState.TILE_NONE;    
+                setState(tileState.TILE_DISABLED);    
                 tileButton.setIcon(piece.getIcon());
             } else if (!targetingPiece.getColour().equals(piece.getColour())) {
                 tileButton.setEnabled(true);
-                state = tileState.TILE_TARGETED;
+                setState(tileState.TILE_TARGETED);
                 tileButton.setIcon(combineIcons(TargetIcon1));
             } 
             return true;
         }    
+    }
+
+    private void setState(tileState state) {
+        this.state = state;
+        if(piece != null) {
+            if(piece.getColour().equals("white")) {
+                switch (state) {
+                    case TILE_NONE:
+                        System.out.println("Setting state to none");
+                        break;
+                    case TILE_SELECTED:
+                        System.out.println("Setting state to selected");
+                        break;
+                    case TILE_TARGETED:
+                        System.out.println("Setting state to targeted");
+                        break;
+                    case TILE_MOVE_TARGETED:
+                        System.out.println("Setting state to move");
+                        break;
+                    case TILE_DISABLED:
+                        System.out.println("Setting state to disabled");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     /**

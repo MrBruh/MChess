@@ -18,13 +18,21 @@ public class MChessBoard {
     private MChessTile selectedTile = null; // The piece that is selected
     private String pieceColourBlack = "black";
     private String pieceColourWhite = "white";
+    private MChessGUI gui;
+    
+    private List<MChessPiece> whitePieceList = new ArrayList<>();
+    private List<MChessPiece> blackPieceList = new ArrayList<>();
+
+    private int turns = 0;
 
     /**
      * Constructor which initializes the board tiles
      * 
      * @param frame The frame to which all the elements will be added
      */
-    public MChessBoard(JFrame frame){
+    public MChessBoard(JFrame frame, MChessGUI gui){
+        this.gui = gui;
+
         // Create the Matrix
         boardMatrix = new MChessTile[boardSize][boardSize];
 
@@ -44,6 +52,8 @@ public class MChessBoard {
         MChessPiece blackKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kb.png"), pieceColourBlack);
         boardMatrix[7][3].assignPiece(whiteKing);
         boardMatrix[0][3].assignPiece(blackKing);
+        whitePieceList.add(whiteKing);
+        blackPieceList.add(blackKing);
 
         // Create a movement list for a bishop
         List<Integer> bishopMovement = new ArrayList<>();
@@ -63,6 +73,10 @@ public class MChessBoard {
         boardMatrix[7][5].assignPiece(whiteBishop2);
         boardMatrix[0][2].assignPiece(blackBishop1);
         boardMatrix[0][5].assignPiece(blackBishop2);
+        whitePieceList.add(whiteBishop1);
+        whitePieceList.add(whiteBishop2);
+        blackPieceList.add(blackBishop1);
+        blackPieceList.add(blackBishop2);
 
         // Create a movement list for a queen
         List<Integer> queenMovement = new ArrayList<>();
@@ -74,6 +88,34 @@ public class MChessBoard {
         MChessPiece blackQueen = new MChessPiece(queenMovement, new ImageIcon("Graphics/qb.png"), pieceColourBlack);
         boardMatrix[7][4].assignPiece(whiteQueen);
         boardMatrix[0][4].assignPiece(blackQueen);
+        whitePieceList.add(whiteQueen);
+        blackPieceList.add(blackQueen);
+
+        disableBlack();
+    }
+
+    /**
+     * Disables black pieces and enables white pieces
+     */
+    public void disableWhite() {
+        for(MChessPiece piece : whitePieceList) {
+            piece.disableTile();
+        }
+        for(MChessPiece piece : blackPieceList) {
+            piece.enableTile();
+        }
+    }
+
+    /**
+     * Disables black pieces and enables white pieces
+     */
+    public void disableBlack() {
+        for(MChessPiece piece : blackPieceList) {
+            piece.disableTile();
+        }
+        for(MChessPiece piece : whitePieceList) {
+            piece.enableTile();
+        }
     }
 
     /**
@@ -105,6 +147,15 @@ public class MChessBoard {
         // Remove the reference from the old tile
         selectedTile.assignPiece(null);
         selectedTile = null;
+
+        turns += 1;
+        if(turns % 2 == 0) {
+            disableBlack();
+        } else {
+            disableWhite();
+        }
+
+        gui.testfunc(turns);
     }
 
     /**
