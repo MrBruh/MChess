@@ -2,7 +2,9 @@
  * @author MrBruh
  */
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -94,10 +96,19 @@ public class MChessBoard {
         for(int i = 0; i < 8; i++){
             knightMovement.add(0);
         }
-        MChessPiece whiteKnight1 = new MChessPiece(knightMovement, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
-        MChessPiece whiteKnight2 = new MChessPiece(knightMovement, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
-        MChessPiece blackKnight1 = new MChessPiece(knightMovement, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
-        MChessPiece blackKnight2 = new MChessPiece(knightMovement, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
+        List<int[]> knightJumps = new ArrayList<>();
+        knightJumps.add(new int[]{-2, 1});
+        knightJumps.add(new int[]{-2, -1});
+        knightJumps.add(new int[]{-1, 2});
+        knightJumps.add(new int[]{1, 2});
+        knightJumps.add(new int[]{2, 1});
+        knightJumps.add(new int[]{2, -1});
+        knightJumps.add(new int[]{-1, -2});
+        knightJumps.add(new int[]{1, -2});
+        MChessPiece whiteKnight1 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
+        MChessPiece whiteKnight2 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
+        MChessPiece blackKnight1 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
+        MChessPiece blackKnight2 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
 
         List<Integer> whitePawnMovement = new ArrayList<>();
         whitePawnMovement.add(1);
@@ -312,6 +323,33 @@ public class MChessBoard {
                     break; // Stop looping if the tile obstructs movement
                 }
             }
+        }
+
+        if(tile.getPiece().getJumpPositions() != null) {
+            drawTileJumps(tile, unTarget, tile.getPiece().getJumpPositions());
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @param tile
+     * @param unTarget
+     * @param jumpPositions
+     */
+    private void drawTileJumps(MChessTile tile, boolean unTarget, List<int[]> jumpPositions) {
+        ListIterator<int[]> itr = jumpPositions.listIterator();
+        while(itr.hasNext()) {
+            // Get jump positions
+            int[] jumpPos = itr.next();
+            int[] boardPos = new int[]{jumpPos[0] + tile.getPos()[0], jumpPos[1] + tile.getPos()[1]};
+
+            if(!checkValidPos(boardPos)){
+                continue; // Skip drawing if the position is invalid
+            }
+            // Depending on whether or not to draw or undraw, draw or
+            // undraw the movement tiles
+            boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget, selectedTile.getPiece());
         }
     }
 
