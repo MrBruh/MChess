@@ -184,7 +184,6 @@ public class MChessGUI {
         } else {
             if( whiteCapturedCount >= 7) {
                 piece.getIcon().paintIcon(null, whiteCapturedGraphics, ((whiteCapturedCount - 7) * 20), 20);
-                System.out.println("over");
             } else {
                 piece.getIcon().paintIcon(null, whiteCapturedGraphics, (whiteCapturedCount * 20), 0);
             }
