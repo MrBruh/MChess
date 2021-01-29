@@ -358,6 +358,7 @@ public class MChessBoard {
         // Remove the reference from the attack tile
         newTile.assignPiece(null);
         // Unselect the selected piece
+        selectedTile.unselectTile();
         selectedTile = null;
 
         // Set the next turn
