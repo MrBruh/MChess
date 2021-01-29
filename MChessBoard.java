@@ -149,7 +149,7 @@ public class MChessBoard {
         List<Integer> bishopMovement = new ArrayList<>();
         for(int i = 0; i < 8; i++) {
             if(i % 2 == 1) {
-                bishopMovement.add(4);
+                bishopMovement.add(3);
             } else {
                 bishopMovement.add(0);
             }
