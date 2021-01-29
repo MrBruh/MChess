@@ -14,6 +14,7 @@ public class MChessPiece {
     private List<Integer> movementRanges;     // All pieces must have movement
                                               // (Even if range is 0)
     private List<int[]> jumpPositions = null; // Not all pieces can jump
+    private List<int[]> attackPattern = null;
 
     private ImageIcon pieceIcon;
     private String pieceColour;
@@ -108,6 +109,24 @@ public class MChessPiece {
     }
 
     /**
+     * Gets the attack pattern of the piece
+     * 
+     * @return The attack pattern of the piece
+     */
+    public List<int[]> getAttackPattern() {
+        return attackPattern;
+    }
+
+    /**
+     * Sets the attack pattern of the piece
+     * 
+     * @param attackPattern The attack pattern of the piece
+     */
+    public void setAttackPattern(List<int[]> attackPattern) {
+        this.attackPattern = attackPattern;
+    }
+
+    /**
      * Gets the icon of the piece
      * 
      * @return The icon of the piece
@@ -150,7 +169,7 @@ public class MChessPiece {
      */
     public boolean isNotMoveAttacker() {
         return isNotMoveAttacker; 
-     }
+    }
  
      /**
       * Sets whether or not the piece can attack on movement
@@ -158,8 +177,8 @@ public class MChessPiece {
       * @param isNotMoveAttacker Whether or not the piece can attack on movement
       */
      public void setNotMoveAttacker(boolean isNotMoveAttacker) {
-         this.isNotMoveAttacker = isNotMoveAttacker;
-     }
+        this.isNotMoveAttacker = isNotMoveAttacker;
+    }
 
      /**
      * Returns whether or not the piece is the king piece
@@ -168,15 +187,33 @@ public class MChessPiece {
      */
     public boolean isKingPiece() {
         return isKingPiece; 
+    }
+
+    /**
+     * Sets king piece state
+    * 
+    * @param isKingPiece The state to set the king piece state
+    */
+    public void setKingPiece(boolean isKingPiece) {
+        this.isKingPiece = isKingPiece;
+    }
+
+    /**
+     * Returns whether or not the piece is ethereal
+     * 
+     * @return Whether or not the piece is ethereal
+     */
+    public boolean isEthereal() {
+        return isEthereal; 
      }
  
      /**
-      * Sets king piece state
+      * Sets ethereal state
       * 
-      * @param isKingPiece The state to set the king piece state
+      * @param isKingPiece The state to set the ethereal state
       */
-     public void setKingPiece(boolean isKingPiece) {
-         this.isKingPiece = isKingPiece;
+     public void setEthereal(boolean isEthereal) {
+         this.isEthereal = isEthereal;
      }
 
 
@@ -205,4 +242,5 @@ public class MChessPiece {
       public void setPawnFirstMove(boolean isPawnFirstMove) {
         this.isPawnFirstMove = isPawnFirstMove;
     }
+    // If you are wondering, yes I did get very lazy with the comments in this class
 }

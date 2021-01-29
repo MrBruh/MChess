@@ -5,8 +5,10 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import javax.swing.*;  
 
@@ -24,6 +26,9 @@ public class MChessBoard {
     
     private List<MChessPiece> whitePieceList = new ArrayList<>();
     private List<MChessPiece> blackPieceList = new ArrayList<>();
+
+    private Map<String, List<Integer>> movementRangesMap = new HashMap<>();
+    private Map<String, List<int[]>> attackPatternsMap = new HashMap<>();
 
     private int turns = 0;
 
@@ -44,58 +49,38 @@ public class MChessBoard {
             }
         }
 
-        // Create a movement list for a king
-        List<Integer> kingMovement = new ArrayList<>();
-        for(int i = 0; i < 8; i++) {
-            kingMovement.add(1);
-        }
+        createMovementRanges();
+        createAttackPatterns();
+
         // Create and place kings using the king movement and icon
-        MChessPiece whiteKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kw.png"), pieceColourWhite);
-        MChessPiece blackKing = new MChessPiece(kingMovement, new ImageIcon("Graphics/kb.png"), pieceColourBlack);
+        MChessPiece whiteKing = new MChessPiece(movementRangesMap.get("king"), new ImageIcon("Graphics/kw.png"), pieceColourWhite);
+        MChessPiece blackKing = new MChessPiece(movementRangesMap.get("king"), new ImageIcon("Graphics/kb.png"), pieceColourBlack);
         whiteKing.setKingPiece(true);
         blackKing.setKingPiece(true);
 
-        // Create a movement list for a bishop
-        List<Integer> bishopMovement = new ArrayList<>();
-        for(int i = 0; i < 8; i++) {
-            if(i % 2 == 1) {
-                bishopMovement.add(7);
-            } else {
-                bishopMovement.add(0);
-            }
-        }
         // Create and place bishops using the bishop movement and icon
-        MChessPiece whiteBishop1 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bw.png"), pieceColourWhite);
-        MChessPiece whiteBishop2 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bw.png"), pieceColourWhite);
-        MChessPiece blackBishop1 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"), pieceColourBlack);
-        MChessPiece blackBishop2 = new MChessPiece(bishopMovement, new ImageIcon("Graphics/bb.png"), pieceColourBlack);
+        MChessPiece whiteBishop1 = new MChessPiece(movementRangesMap.get("bishop"), new ImageIcon("Graphics/bw.png"), pieceColourWhite);
+        MChessPiece whiteBishop2 = new MChessPiece(movementRangesMap.get("bishop"), new ImageIcon("Graphics/bw.png"), pieceColourWhite);
+        MChessPiece blackBishop1 = new MChessPiece(movementRangesMap.get("bishop"), new ImageIcon("Graphics/bb.png"), pieceColourBlack);
+        MChessPiece blackBishop2 = new MChessPiece(movementRangesMap.get("bishop"), new ImageIcon("Graphics/bb.png"), pieceColourBlack);
+        whiteBishop1.setEthereal(true);
+        whiteBishop2.setEthereal(true);
+        blackBishop1.setEthereal(true);
+        blackBishop2.setEthereal(true);
 
-        // Create a movement list for a queen
-        List<Integer> queenMovement = new ArrayList<>();
-        for(int i = 0; i < 8; i++) {
-            queenMovement.add(7);
-        }
         // Create and place queens using the queen movement and icon
-        MChessPiece whiteQueen = new MChessPiece(queenMovement, new ImageIcon("Graphics/qw.png"), pieceColourWhite);
-        MChessPiece blackQueen = new MChessPiece(queenMovement, new ImageIcon("Graphics/qb.png"), pieceColourBlack);
+        MChessPiece whiteQueen = new MChessPiece(movementRangesMap.get("queen"), new ImageIcon("Graphics/qw.png"), pieceColourWhite);
+        MChessPiece blackQueen = new MChessPiece(movementRangesMap.get("queen"), new ImageIcon("Graphics/qb.png"), pieceColourBlack);
 
-        List<Integer> rookMovement = new ArrayList<>();
-        for(int i = 0; i < 8; i++) {
-            if(i % 2 == 0) {
-                rookMovement.add(7);
-            } else {
-                rookMovement.add(0);
-            }
-        }
-        MChessPiece whiteRook1 = new MChessPiece(rookMovement, new ImageIcon("Graphics/rw.png"), pieceColourWhite);
-        MChessPiece whiteRook2 = new MChessPiece(rookMovement, new ImageIcon("Graphics/rw.png"), pieceColourWhite);
-        MChessPiece blackRook1 = new MChessPiece(rookMovement, new ImageIcon("Graphics/rb.png"), pieceColourBlack);
-        MChessPiece blackRook2 = new MChessPiece(rookMovement, new ImageIcon("Graphics/rb.png"), pieceColourBlack);
+        MChessPiece whiteRook1 = new MChessPiece(movementRangesMap.get("rook"), new ImageIcon("Graphics/rw.png"), pieceColourWhite);
+        MChessPiece whiteRook2 = new MChessPiece(movementRangesMap.get("rook"), new ImageIcon("Graphics/rw.png"), pieceColourWhite);
+        MChessPiece blackRook1 = new MChessPiece(movementRangesMap.get("rook"), new ImageIcon("Graphics/rb.png"), pieceColourBlack);
+        MChessPiece blackRook2 = new MChessPiece(movementRangesMap.get("rook"), new ImageIcon("Graphics/rb.png"), pieceColourBlack);
+        whiteRook1.setAttackPattern(attackPatternsMap.get("rook"));
+        whiteRook2.setAttackPattern(attackPatternsMap.get("rook"));
+        blackRook1.setAttackPattern(attackPatternsMap.get("rook"));
+        blackRook2.setAttackPattern(attackPatternsMap.get("rook"));
 
-        List<Integer> knightMovement = new ArrayList<>();
-        for(int i = 0; i < 8; i++){
-            knightMovement.add(0);
-        }
         List<int[]> knightJumps = new ArrayList<>();
         knightJumps.add(new int[]{-2, 1});
         knightJumps.add(new int[]{-2, -1});
@@ -105,11 +90,94 @@ public class MChessBoard {
         knightJumps.add(new int[]{2, -1});
         knightJumps.add(new int[]{-1, -2});
         knightJumps.add(new int[]{1, -2});
-        MChessPiece whiteKnight1 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
-        MChessPiece whiteKnight2 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
-        MChessPiece blackKnight1 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
-        MChessPiece blackKnight2 = new MChessPiece(knightMovement, knightJumps, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
+        MChessPiece whiteKnight1 = new MChessPiece(movementRangesMap.get("knight"), knightJumps, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
+        MChessPiece whiteKnight2 = new MChessPiece(movementRangesMap.get("knight"), knightJumps, new ImageIcon("Graphics/nw.png"), pieceColourWhite);
+        MChessPiece blackKnight1 = new MChessPiece(movementRangesMap.get("knight"), knightJumps, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
+        MChessPiece blackKnight2 = new MChessPiece(movementRangesMap.get("knight"), knightJumps, new ImageIcon("Graphics/nb.png"), pieceColourBlack);
+        whiteKnight1.setAttackPattern(attackPatternsMap.get("knight"));
+        whiteKnight2.setAttackPattern(attackPatternsMap.get("knight"));
+        blackKnight1.setAttackPattern(attackPatternsMap.get("knight"));
+        blackKnight2.setAttackPattern(attackPatternsMap.get("knight"));
 
+        // Must add the pieces in this order to the piece lists
+        whitePieceList.add(whiteRook1);
+        whitePieceList.add(whiteKnight1);
+        whitePieceList.add(whiteBishop1);
+        whitePieceList.add(whiteQueen);
+        whitePieceList.add(whiteKing);
+        whitePieceList.add(whiteBishop2);
+        whitePieceList.add(whiteKnight2);
+        whitePieceList.add(whiteRook2);
+        for(int i = 0; i < 8; i++) {
+            whitePieceList.add(new MChessPiece(movementRangesMap.get("wPawn"), new ImageIcon("Graphics/pw.png"), pieceColourWhite));
+            whitePieceList.get(8 + i).initializePawn(movementRangesMap.get("wPawnFirst"));
+            whitePieceList.get(8 + i).setNotMoveAttacker(true);
+            whitePieceList.get(8 + i).setAttackPattern(attackPatternsMap.get("wPawn"));
+        }
+
+        blackPieceList.add(blackRook1);
+        blackPieceList.add(blackKnight1);
+        blackPieceList.add(blackBishop1);
+        blackPieceList.add(blackQueen);
+        blackPieceList.add(blackKing);
+        blackPieceList.add(blackBishop2);
+        blackPieceList.add(blackKnight2);
+        blackPieceList.add(blackRook2);
+        for(int i = 0; i < 8; i++) {
+            blackPieceList.add(new MChessPiece(movementRangesMap.get("bPawn"), new ImageIcon("Graphics/pb.png"), pieceColourBlack));
+            blackPieceList.get(8 + i).initializePawn(movementRangesMap.get("bPawnFirst"));
+            blackPieceList.get(8 + i).setNotMoveAttacker(true);
+            blackPieceList.get(8 + i).setAttackPattern(attackPatternsMap.get("bPawn"));
+        }
+
+        resetPositions();
+    }
+
+    /**
+     * This is where the movement ranges of all the pieces are defined
+     * The movement ranges define how far a piece can move in each direction
+     * index 0 is north, going clockwise to index 7, which is northwest
+     */
+    private void createMovementRanges() {
+        // Create a movement list for a king
+        List<Integer> kingMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            kingMovement.add(1);
+        }
+
+        // Create a movement list for a bishop
+        List<Integer> bishopMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            if(i % 2 == 1) {
+                bishopMovement.add(4);
+            } else {
+                bishopMovement.add(0);
+            }
+        }
+
+        // Create a movement list for a queen
+        List<Integer> queenMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            queenMovement.add(7);
+        }
+
+        // Create a movement list for a rook
+        List<Integer> rookMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            if(i % 2 == 0) {
+                rookMovement.add(7);
+            } else {
+                rookMovement.add(0);
+            }
+        }
+
+        // Create a movement list for a knight
+        List<Integer> knightMovement = new ArrayList<>();
+        for(int i = 0; i < 8; i++){
+            knightMovement.add(0);
+        }
+
+        // Create a movement list for a white pawn and it's first move
         List<Integer> whitePawnMovement = new ArrayList<>();
         whitePawnMovement.add(1);
         for(int i = 0; i < 7; i++) {
@@ -121,6 +189,7 @@ public class MChessBoard {
             whitePawnFirstMovement.add(0);
         }
 
+        // Create a movement list for a black pawn and it's first move
         List<Integer> blackPawnMovement = new ArrayList<>();
         for(int i = 0; i < 8; i++) {
             if(i == 4) {
@@ -138,36 +207,46 @@ public class MChessBoard {
             }
         }
 
-        // Must add the pieces in this order to the piece lists
-        whitePieceList.add(whiteRook1);
-        whitePieceList.add(whiteKnight1);
-        whitePieceList.add(whiteBishop1);
-        whitePieceList.add(whiteQueen);
-        whitePieceList.add(whiteKing);
-        whitePieceList.add(whiteBishop2);
-        whitePieceList.add(whiteKnight2);
-        whitePieceList.add(whiteRook2);
-        for(int i = 0; i < 8; i++) {
-            whitePieceList.add(new MChessPiece(whitePawnMovement, new ImageIcon("Graphics/pw.png"), pieceColourWhite));
-            whitePieceList.get(8 + i).initializePawn(whitePawnFirstMovement);
-            whitePieceList.get(8 + i).setNotMoveAttacker(true);
-        }
+        // Put all the movement ranges into a map
+        movementRangesMap.put("king", kingMovement);
+        movementRangesMap.put("queen", queenMovement);
+        movementRangesMap.put("bishop", bishopMovement);
+        movementRangesMap.put("rook", rookMovement);
+        movementRangesMap.put("knight", knightMovement);
+        movementRangesMap.put("wPawn", whitePawnMovement);
+        movementRangesMap.put("wPawnFirst", whitePawnFirstMovement);
+        movementRangesMap.put("bPawn", blackPawnMovement);
+        movementRangesMap.put("bPawnFirst", blackPawnFirstMovement);
+    }
 
-        blackPieceList.add(blackRook1);
-        blackPieceList.add(blackKnight1);
-        blackPieceList.add(blackBishop1);
-        blackPieceList.add(blackQueen);
-        blackPieceList.add(blackKing);
-        blackPieceList.add(blackBishop2);
-        blackPieceList.add(blackKnight2);
-        blackPieceList.add(blackRook2);
-        for(int i = 0; i < 8; i++) {
-            blackPieceList.add(new MChessPiece(blackPawnMovement, new ImageIcon("Graphics/pb.png"), pieceColourBlack));
-            blackPieceList.get(8 + i).initializePawn(blackPawnFirstMovement);
-            blackPieceList.get(8 + i).setNotMoveAttacker(true);
-        }
+    /**
+     * 
+     */
+    private void createAttackPatterns() {
+        List<int[]> whitePawnAttacks = new ArrayList<>();
+        whitePawnAttacks.add(new int[]{1, -1});
+        whitePawnAttacks.add(new int[]{-1, -1});
 
-        resetPositions();
+        List<int[]> blackPawnAttacks = new ArrayList<>();
+        blackPawnAttacks.add(new int[]{1, 1});
+        blackPawnAttacks.add(new int[]{-1, 1});
+
+        List<int[]> knightAttacks = new ArrayList<>();
+        knightAttacks.add(new int[]{0, 1});
+        knightAttacks.add(new int[]{0, -1});
+        knightAttacks.add(new int[]{1, 0});
+        knightAttacks.add(new int[]{-1, 0});
+
+        List<int[]> rookAttacks = new ArrayList<>();
+        rookAttacks.add(new int[]{1, 1});
+        rookAttacks.add(new int[]{1, -1});
+        rookAttacks.add(new int[]{1, -1});
+        rookAttacks.add(new int[]{-1, -1});
+
+        attackPatternsMap.put("wPawn", whitePawnAttacks);
+        attackPatternsMap.put("bPawn", blackPawnAttacks);
+        attackPatternsMap.put("knight", knightAttacks);
+        attackPatternsMap.put("rook", rookAttacks);
     }
 
     public void resetPositions() {
@@ -238,7 +317,7 @@ public class MChessBoard {
     }
 
     /**
-     * This moves a piece by pass the piece reference from the old tile
+     * This moves a piece by passing the piece reference from the old tile
      * to the new tile, and unreferencing the old tile
      * 
      * @param newTile The new tile that a piece is moved to
@@ -253,6 +332,32 @@ public class MChessBoard {
         newTile.movePiece(selectedTile.getPiece());
         // Remove the reference from the old tile
         selectedTile.assignPiece(null);
+        selectedTile = null;
+
+        // Set the next turn
+        turns += 1;
+        if(turns % 2 == 0) {
+            disableBlack();
+        } else {
+            disableWhite();
+        }
+
+        gui.updateTurn(turns);
+    }
+
+    /**
+     * This update the gui after a piece has attacked another without moving
+     * 
+     * @param newTile The new tile that a piece is moved to
+     */
+    public void attackPieceToTile(MChessTile newTile) {
+
+        // Undraw movement tiles
+        drawTileMovement(selectedTile, true);
+
+        // Remove the reference from the attack tile
+        newTile.assignPiece(null);
+        // Unselect the selected piece
         selectedTile = null;
 
         // Set the next turn
@@ -321,7 +426,8 @@ public class MChessBoard {
                 }
                 // Depending on whether or not to draw or undraw, draw or
                 // undraw the movement tiles
-                if (boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget, selectedTile.getPiece())) {
+                if (boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget, selectedTile.getPiece()) &&
+                    !tile.getPiece().isEthereal()) {
                     break; // Stop looping if the tile obstructs movement
                 }
             }
@@ -330,14 +436,20 @@ public class MChessBoard {
         if(tile.getPiece().getJumpPositions() != null) {
             drawTileJumps(tile, unTarget, tile.getPiece().getJumpPositions());
         }
+
+        if(tile.getPiece().getAttackPattern() != null) {
+            drawTileAttacks(tile, unTarget, tile.getPiece().getAttackPattern());
+        }
     }
 
     /**
+     * This helper method has almost the same function as above, 
+     * but since jump positions are already relative, we don't have
+     * to bother converting
      * 
-     * 
-     * @param tile
-     * @param unTarget
-     * @param jumpPositions
+     * @param tile The reference tile to draw around
+     * @param unTarget Whether or not to undraw or draw the movement tiles
+     * @param jumpPositions The jump positions to use
      */
     private void drawTileJumps(MChessTile tile, boolean unTarget, List<int[]> jumpPositions) {
         ListIterator<int[]> itr = jumpPositions.listIterator();
@@ -349,9 +461,30 @@ public class MChessBoard {
             if(!checkValidPos(boardPos)){
                 continue; // Skip drawing if the position is invalid
             }
-            // Depending on whether or not to draw or undraw, draw or
-            // undraw the movement tiles
+            // Draw the jump position
             boardMatrix[boardPos[1]][boardPos[0]].targetMove(unTarget, selectedTile.getPiece());
+        }
+    }
+
+    /**
+     * Again, the same as above but for attack patterns instead
+     * 
+     * @param tile The reference tile to draw around
+     * @param unTarget Whether or not to undraw or draw the movement tiles
+     * @param attackPattern The attack pattern to use
+     */
+    private void drawTileAttacks(MChessTile tile, boolean unTarget, List<int[]> attackPattern) {
+        ListIterator<int[]> itr = attackPattern.listIterator();
+        while(itr.hasNext()) {
+            // Get attack positions
+            int[] attackPos = itr.next();
+            int[] boardPos = new int[]{attackPos[0] + tile.getPos()[0], attackPos[1] + tile.getPos()[1]};
+
+            if(!checkValidPos(boardPos)){
+                continue; // Skip drawing if the position is invalid
+            }
+            // Draw the attack position
+            boardMatrix[boardPos[1]][boardPos[0]].targetAttack(unTarget, selectedTile.getPiece());
         }
     }
 
@@ -371,7 +504,7 @@ public class MChessBoard {
     }
 
     /**
-     * This converts a movement range list into a board position
+     * This converts a movement range list and current position into a board position
      * 
      * @param index The index is used to decide direction
      * @param range The range is used to move x amount if that direction

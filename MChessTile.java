@@ -23,15 +23,19 @@ public class MChessTile {
 
     private static final Icon selectedIcon1 = new ImageIcon("Graphics/Selected1.png");
     private static final Icon selectedIcon2 = new ImageIcon("Graphics/Selected2.png");
-    private static final Icon TargetIcon1 = new ImageIcon("Graphics/Target1.png");
-    private static final Icon EtherealIcon2 = new ImageIcon("Graphics/Ethereal1.png");
+    private static final Icon targetIcon1 = new ImageIcon("Graphics/Target1.png");
+    private static final Icon etherealIcon = new ImageIcon("Graphics/Ethereal1.png");
+    private static final Icon attackIcon = new ImageIcon("Graphics/Attack1.png");
 
     enum tileState {
-        TILE_NONE,          // When the tile is neither selected or targeted
-        TILE_SELECTED,      // When the tile is selected
-        TILE_TARGETED,      // When the tile is targeted for an attack
-        TILE_MOVE_TARGETED, // When the tile is target for a move
-        TILE_DISABLED       // When the tile has a piece that can't move
+        TILE_NONE,              // When the tile is neither selected or targeted
+        TILE_SELECTED,          // When the tile is selected
+        TILE_TARGETED,          // When the tile is targeted for a move attack
+        TILE_MOVE_TARGETED,     // When the tile is targeted for a move
+        TILE_MOVE_ETHEREAL,     // When the tile is targeted for an ethereal move
+        TILE_ATTACK_DISPLAY,    // When the tile is displaying possible attacks
+        TILE_ATTACK_TARGETED,   // When the tile is targeted for an attack
+        TILE_DISABLED           // When the tile has a piece that can't move
     }
 
     private tileState state = tileState.TILE_NONE;
@@ -85,10 +89,16 @@ public class MChessTile {
                         board.getGUI().addCaptured(piece);
                         board.movePieceToTile(self);
                         break;
+                    case TILE_ATTACK_TARGETED:
+                        board.getGUI().addCaptured(piece);
+                        board.attackPieceToTile(self);
+                        break;
+                    case TILE_MOVE_ETHEREAL:
                     case TILE_MOVE_TARGETED:
                         // Move piece to tile if move targeted
                         board.movePieceToTile(self);
                         break;
+                    case TILE_ATTACK_DISPLAY:
                     case TILE_DISABLED:
                         break;
                     default:
@@ -163,7 +173,7 @@ public class MChessTile {
      * Targets or untargets this tile for movement
      * 
      * @param unTarget
-     * @return
+     * @return A boolean on whether this tile will obstruct movement
      */
     public boolean targetMove(boolean unTarget, MChessPiece targetingPiece) {
         if(piece == null) {
@@ -174,9 +184,14 @@ public class MChessTile {
                 tileButton.setIcon(null);
             } else {
                 // Enable button and add icon
-                tileButton.setEnabled(true);        
-                setState(tileState.TILE_MOVE_TARGETED);    
-                tileButton.setIcon(selectedIcon2); 
+                tileButton.setEnabled(true);  
+                if(targetingPiece.isEthereal()) {
+                    setState(tileState.TILE_MOVE_ETHEREAL);
+                    tileButton.setIcon(etherealIcon); 
+                } else {   
+                    setState(tileState.TILE_MOVE_TARGETED); 
+                    tileButton.setIcon(selectedIcon2);    
+                }
             }
             return false;
         } else {
@@ -187,10 +202,42 @@ public class MChessTile {
             } else if (!targetingPiece.getColour().equals(piece.getColour()) && !targetingPiece.isNotMoveAttacker()) {
                 tileButton.setEnabled(true);
                 setState(tileState.TILE_TARGETED);
-                tileButton.setIcon(combineIcons(TargetIcon1));
+                tileButton.setIcon(combineIcons(targetIcon1));
             } 
             return true;
         }    
+    }
+
+    /**
+     * Same as above, but for attacks instead of movement
+     * 
+     * @param unTarget
+     * @param targetingPiece
+     */
+    public void targetAttack(boolean unTarget, MChessPiece targetingPiece) {
+        if(piece == null) {
+            if(unTarget) {
+                // Disable button and remove icon
+                tileButton.setEnabled(false); 
+                setState(tileState.TILE_NONE);   
+                tileButton.setIcon(null);
+            } else {
+                // Since there is no piece, we are only displaying possible attacks
+                tileButton.setEnabled(true); 
+                setState(tileState.TILE_ATTACK_DISPLAY);
+                tileButton.setIcon(attackIcon); 
+            }
+        } else {
+            if(unTarget && state != tileState.TILE_NONE) {
+                // Remove target icon  
+                setState(tileState.TILE_DISABLED);    
+                tileButton.setIcon(piece.getIcon());
+            } else if(!targetingPiece.getColour().equals(piece.getColour())) {
+                tileButton.setEnabled(true); 
+                setState(tileState.TILE_ATTACK_TARGETED);
+                tileButton.setIcon(combineIcons(attackIcon));
+            }
+        }
     }
 
     private void setState(tileState state) {

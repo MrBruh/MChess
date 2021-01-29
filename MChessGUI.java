@@ -62,33 +62,33 @@ public class MChessGUI {
 
         f.add(turnIndicator);
 
-        whiteCapturedLabel.setBounds(580, 307, 180, 50);
+        whiteCapturedLabel.setBounds(580, 317, 180, 50);
         whiteCapturedLabel.setFont(textFont);
         whiteCapturedLabel.setOpaque(false);
         whiteCapturedLabel.setFocusable(false);
 
         f.add(whiteCapturedLabel);
 
-        whiteCapturedDisplayLabel.setBounds(580, 357, 180, 70);
-        whiteCapturedDisplayLabel.setOpaque(true);
+        whiteCapturedDisplayLabel.setBounds(560, 322, 190, 150);
+        whiteCapturedDisplayLabel.setOpaque(false);
         whiteCapturedDisplayLabel.setFocusable(false);
 
         f.add(whiteCapturedDisplayLabel);
 
-        blackCapturedLabel.setBounds(580, 427, 180, 50);
+        blackCapturedLabel.setBounds(580, 432, 180, 50);
         blackCapturedLabel.setFont(textFont);
         blackCapturedLabel.setOpaque(false);
         blackCapturedLabel.setFocusable(false);
 
         f.add(blackCapturedLabel);
 
-        blackCapturedDisplayLabel.setBounds(580, 477, 180, 70);
-        blackCapturedDisplayLabel.setOpaque(true);
+        blackCapturedDisplayLabel.setBounds(560, 437, 190, 150);
+        blackCapturedDisplayLabel.setOpaque(false);
         blackCapturedDisplayLabel.setFocusable(false);
 
         f.add(blackCapturedDisplayLabel);
 
-        forfeitButton.setBounds(590, 150, 140, 50);
+        forfeitButton.setBounds(590, 130, 140, 50);
         forfeitButton.setFont(buttonFont);
         forfeitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -102,7 +102,7 @@ public class MChessGUI {
 
         f.add(forfeitButton);
 
-        playAgainButton.setBounds(590, 205, 140, 50);
+        playAgainButton.setBounds(590, 185, 140, 50);
         playAgainButton.setFont(buttonFont);
         playAgainButton.setEnabled(false);
         playAgainButton.addActionListener(new ActionListener() {
@@ -174,11 +174,20 @@ public class MChessGUI {
             setWinner(piece.getColour());
         }
         if(piece.getColour().equals("white")) {
-            piece.getIcon().paintIcon(null, blackCapturedGraphics, (blackCapturedCount * 20), 0);
+            if( blackCapturedCount >= 7) {
+                piece.getIcon().paintIcon(null, blackCapturedGraphics, ((blackCapturedCount - 7)* 20), 20);
+            } else {
+                piece.getIcon().paintIcon(null, blackCapturedGraphics, (blackCapturedCount * 20), 0);
+            }
             blackCapturedDisplayLabel.setIcon(new ImageIcon(blackCapturedImage));
             blackCapturedCount += 1;
         } else {
-            piece.getIcon().paintIcon(null, whiteCapturedGraphics, (whiteCapturedCount * 20), 0);
+            if( whiteCapturedCount >= 7) {
+                piece.getIcon().paintIcon(null, whiteCapturedGraphics, ((whiteCapturedCount - 7) * 20), 20);
+                System.out.println("over");
+            } else {
+                piece.getIcon().paintIcon(null, whiteCapturedGraphics, (whiteCapturedCount * 20), 0);
+            }
             whiteCapturedDisplayLabel.setIcon(new ImageIcon(whiteCapturedImage));
             whiteCapturedCount += 1;
         }
@@ -190,8 +199,8 @@ public class MChessGUI {
     private void resetCapturedImages() {
         whiteCapturedDisplayLabel.setIcon(null);
         blackCapturedDisplayLabel.setIcon(null);
-        whiteCapturedImage = new BufferedImage(200, 70, BufferedImage.TYPE_INT_ARGB);
-        blackCapturedImage = new BufferedImage(200, 70, BufferedImage.TYPE_INT_ARGB);
+        whiteCapturedImage = new BufferedImage(200, 90, BufferedImage.TYPE_INT_ARGB);
+        blackCapturedImage = new BufferedImage(200, 90, BufferedImage.TYPE_INT_ARGB);
         whiteCapturedGraphics = whiteCapturedImage.getGraphics();
         blackCapturedGraphics = blackCapturedImage.getGraphics();
         whiteCapturedCount = 0;
