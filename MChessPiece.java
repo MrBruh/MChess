@@ -14,7 +14,7 @@ public class MChessPiece {
     private List<Integer> movementRanges;     // All pieces must have movement
                                               // (Even if range is 0)
     private List<int[]> jumpPositions = null; // Not all pieces can jump
-    private List<int[]> attackPattern = null;
+    private List<int[]> attackPattern = null; // Not all pieces can attack
 
     private ImageIcon pieceIcon;
     private String pieceColour;

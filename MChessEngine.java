@@ -7,6 +7,6 @@
   */
 public class MChessEngine {
     public MChessEngine() {
-        //
+        //Unused
     }
 }

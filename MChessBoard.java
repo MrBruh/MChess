@@ -40,7 +40,7 @@ public class MChessBoard {
     public MChessBoard(JFrame frame, MChessGUI gui){
         this.gui = gui;
 
-        // Create the Matrix
+        // Create the board matrix
         boardMatrix = new MChessTile[boardSize][boardSize];
 
         for (int i = 0; i < boardSize; i++) {
@@ -48,6 +48,9 @@ public class MChessBoard {
                 boardMatrix[i][j] = new MChessTile(frame, this, j, i);
             }
         }
+
+        // This huge section is basically defining all the pieces and their
+        // abilities and movements
 
         createMovementRanges();
         createAttackPatterns();
@@ -109,6 +112,7 @@ public class MChessBoard {
         whitePieceList.add(whiteKnight2);
         whitePieceList.add(whiteRook2);
         for(int i = 0; i < 8; i++) {
+            // Define pawns in a loop because there lots of them
             whitePieceList.add(new MChessPiece(movementRangesMap.get("wPawn"), new ImageIcon("Graphics/pw.png"), pieceColourWhite));
             whitePieceList.get(8 + i).initializePawn(movementRangesMap.get("wPawnFirst"));
             whitePieceList.get(8 + i).setNotMoveAttacker(true);
@@ -124,12 +128,14 @@ public class MChessBoard {
         blackPieceList.add(blackKnight2);
         blackPieceList.add(blackRook2);
         for(int i = 0; i < 8; i++) {
+            // Define pawns in a loop because there lots of them
             blackPieceList.add(new MChessPiece(movementRangesMap.get("bPawn"), new ImageIcon("Graphics/pb.png"), pieceColourBlack));
             blackPieceList.get(8 + i).initializePawn(movementRangesMap.get("bPawnFirst"));
             blackPieceList.get(8 + i).setNotMoveAttacker(true);
             blackPieceList.get(8 + i).setAttackPattern(attackPatternsMap.get("bPawn"));
         }
 
+        // Put all the pieces in their proper positions
         resetPositions();
     }
 
@@ -220,7 +226,8 @@ public class MChessBoard {
     }
 
     /**
-     * 
+     * This helper functions is where attack patterns are created, which store
+     * relative positions.
      */
     private void createAttackPatterns() {
         List<int[]> whitePawnAttacks = new ArrayList<>();
@@ -249,6 +256,12 @@ public class MChessBoard {
         attackPatternsMap.put("rook", rookAttacks);
     }
 
+    /**
+     * This function is called at the start of every new game, and dereferences
+     * the piece reference from the middle tiles, and then sets all the pieces
+     * to their proper positions by using resetPieceList, reset turn number and
+     * disables black pieces 
+     */
     public void resetPositions() {
         // I know it's unconventional but it's conveniant
         for(int i = 2; i < 6; i++){
@@ -264,6 +277,18 @@ public class MChessBoard {
         disableBlack();
     }
 
+    /**
+     * This helper function puts all the pieces into their proper places, given
+     * The rows(This is why the pieces had to be add to the piece list in a
+     * specific order)
+     * The first 8 pieces in the list are non-pawns(heavy), and are put into
+     * their designated row. Then next 8 pieces are pawns, which get put into
+     * their designated row.
+     * 
+     * @param pieceList The piece list to place the pieces from
+     * @param heavyRow The row to put the non-pawns into
+     * @param pawnRow The row to put the pawns into
+     */
     private void resetPieceList(List<MChessPiece> pieceList, int heavyRow, int pawnRow) {
         ListIterator<MChessPiece> itr = pieceList.listIterator();
         int index;
@@ -303,7 +328,7 @@ public class MChessBoard {
 
     /**
      * This function is called by a selected tile to let the board know
-     * that it has been selected.
+     * that it has been selected. Is also used to unselect tiles.
      * 
      * @param tile The tile that is selected
      */
@@ -341,20 +366,18 @@ public class MChessBoard {
         } else {
             disableWhite();
         }
-
+        // Update the turn in the GUI
         gui.updateTurn(turns);
     }
 
     /**
-     * This update the gui after a piece has attacked another without moving
+     * This updates the GUI after a piece has attacked another without moving
      * 
      * @param newTile The new tile that a piece is moved to
      */
     public void attackPieceToTile(MChessTile newTile) {
-
         // Undraw movement tiles
         drawTileMovement(selectedTile, true);
-
         // Remove the reference from the attack tile
         newTile.assignPiece(null);
         // Unselect the selected piece
@@ -368,23 +391,24 @@ public class MChessBoard {
         } else {
             disableWhite();
         }
-
+        // Update the GUI
         gui.updateTurn(turns);
     }
 
     /**
+     * This returns the GUI reference of the board
      * 
-     * 
-     * @return
+     * @return The gui reference of the board
      */
     public MChessGUI getGUI() {
         return gui;
     }
 
     /**
+     * This function returns the number of turns that have passed, which is
+     * used by the GUI to determine who's turn it is to display
      * 
-     * 
-     * @return
+     * @return The number of turns that have passed so far
      */
     public int getTurns() {
         return turns;
@@ -433,11 +457,11 @@ public class MChessBoard {
                 }
             }
         }
-
+        // This draws the jump positions of the piece if it has any
         if(tile.getPiece().getJumpPositions() != null) {
             drawTileJumps(tile, unTarget, tile.getPiece().getJumpPositions());
         }
-
+        // This draws the attack patterns of the piece if it has any
         if(tile.getPiece().getAttackPattern() != null) {
             drawTileAttacks(tile, unTarget, tile.getPiece().getAttackPattern());
         }

@@ -15,8 +15,7 @@ public class Main {
    * @param args Command line arguments
    */
   public static void main(String[] args) {  
-    JFrame frame = new JFrame();
-    MChessGUI gui = new MChessGUI(frame);
+    MChessGUI gui = new MChessGUI();
 
   }  
 }  

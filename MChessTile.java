@@ -177,6 +177,7 @@ public class MChessTile {
      */
     public boolean targetMove(boolean unTarget, MChessPiece targetingPiece) {
         if(piece == null) {
+            // If there is no piece on the tile, target for movement
             if(unTarget){
                 // Disable button and remove icon
                 tileButton.setEnabled(false); 
@@ -195,6 +196,7 @@ public class MChessTile {
             }
             return false;
         } else {
+            // If there is a piece on the tile, target for capture
             if(unTarget && state != tileState.TILE_NONE) {
                 // Remove target icon  
                 setState(tileState.TILE_DISABLED);    
@@ -240,10 +242,17 @@ public class MChessTile {
         }
     }
 
+    /**
+     * Sets the state of the tile
+     * I put this in a seperate function so I could better debug
+     * 
+     * @param state The state to set the tile to
+     */
     private void setState(tileState state) {
         this.state = state;
-        if(piece != null) {
-            /*if(piece.getColour().equals("white")) {
+        // I'm keep this code below as a just in case for debugging
+        /*if(piece != null) {
+            if(piece.getColour().equals("white")) {
                 switch (state) {
                     case TILE_NONE:
                         System.out.println("Setting state to none");
@@ -263,8 +272,8 @@ public class MChessTile {
                     default:
                         break;
                 }
-            }*/
-        }
+            }
+        }*/
     }
 
     /**
