@@ -296,8 +296,10 @@ public class MChessBoard {
             index = itr.nextIndex();
             if(index < 8) {
                 boardMatrix[heavyRow][index].assignPiece(itr.next());
-            } else { 
-                boardMatrix[pawnRow][index - 8].assignPiece(itr.next());
+            } else {
+                MChessPiece piece = itr.next();
+                piece.setPawnFirstMove(true);
+                boardMatrix[pawnRow][index - 8].assignPiece(piece);
             }
         }
     }
